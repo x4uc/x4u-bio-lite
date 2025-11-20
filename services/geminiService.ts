@@ -2,8 +2,7 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { UserProfile, DailyMetric, AIRecommendation } from "../types";
 
 // Initialize Gemini Client
-// NOTE: In a real production app, ensure process.env.API_KEY is set.
-// If not set, the app will likely fail gracefully in the UI.
+// 
 const getAiClient = () => {
   const apiKey = process.env.API_KEY;
   if (!apiKey) {
