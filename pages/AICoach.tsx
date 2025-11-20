@@ -2,8 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Send, Bot, User, Loader2 } from 'lucide-react';
 import { createChatSession } from '../services/geminiService';
 import { getMetrics, getUserProfile } from '../services/dataService';
-import { AIChatMessage, UserProfile } from '../types';
-import { Chat } from '@google/genai';
+import { AIChatMessage } from '../types';
+//
+import { ChatSession } from "@google/generative-ai";
 
 const AICoach: React.FC = () => {
   const [messages, setMessages] = useState<AIChatMessage[]>([
@@ -11,13 +12,20 @@ const AICoach: React.FC = () => {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [chatSession, setChatSession] = useState<Chat | null>(null);
+  //
+  const [chatSession, setChatSession] = useState<ChatSession | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const initChat = async () => {
       const [metrics, profile] = await Promise.all([getMetrics(), getUserProfile()]);
-      if (profile && process.env.API_KEY) {
+      
+      // -------------------------------------------------------
+      //
+      //
+      //
+      // -------------------------------------------------------
+      if (profile) {
         const session = createChatSession(profile, metrics);
         setChatSession(session);
       }
@@ -49,20 +57,22 @@ const AICoach: React.FC = () => {
             setMessages(prev => [...prev, {
                 id: (Date.now() + 1).toString(),
                 role: 'model',
-                text: "I'm currently in offline mode. Please check your API Key.",
+                text: "I'm currently in offline mode. Please check your API Key settings.",
                 timestamp: Date.now()
-            }]);
+             }]);
             setIsLoading(false);
          }, 1000);
          return;
       }
 
-      const result = await chatSession.sendMessage({ message: userMsg.text });
+      //
+      const result = await chatSession.sendMessage(userMsg.text);
+      const responseText = result.response.text(); // استخراج النص من الاستجابة
       
       const modelMsg: AIChatMessage = {
         id: (Date.now() + 1).toString(),
         role: 'model',
-        text: result.text || "I couldn't generate a response.",
+        text: responseText || "I couldn't generate a response.",
         timestamp: Date.now()
       };
       
