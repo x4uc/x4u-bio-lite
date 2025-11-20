@@ -1,5 +1,5 @@
 🧬 X4U Bio
-
+v - lite
 Your Smart AI Health Companion
 
 X4U Bio is an intelligent health and lifestyle application designed to help users improve their daily habits by combining AI with their real-life data.
