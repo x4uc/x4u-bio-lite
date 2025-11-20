@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>X4U Bio - AI Health Optimizer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      // Environment Configuration Polyfill
+      window.process = {
+        env: {
+          API_KEY: "AIzaSyCXsGg7YFv9mH4zukZfZTSlmqIXjpiZsUU",
+          FIREBASE_API_KEY: "AIzaSyCXsGg7YFv9mH4zukZfZTSlmqIXjpiZsUU",
+          FIREBASE_AUTH_DOMAIN: "x4u-bio-max.web.app",
+          FIREBASE_PROJECT_ID: "x4u-bio-max",
+          FIREBASE_STORAGE_BUCKET: "x4u-bio-max.firebasestorage.app",
+          FIREBASE_MESSAGING_SENDER_ID: "364285729988",
+          FIREBASE_APP_ID: "1:364285729988:web:dd544d76faf69a9f1f3d91",
+          FIREBASE_MEASUREMENT_ID: "G-8CQ47B05BT",
+          GOOGLE_CLIENT_ID: "364285729988-v7eimo2h5f2vasp5p81q6sr6om70j5d8.apps.googleusercontent.com"
+        }
+      };
+
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                50: '#f0fdf4',
+                100: '#dcfce7',
+                500: '#22c55e',
+                600: '#16a34a',
+                700: '#15803d',
+                900: '#14532d',
+              },
+              // Semantic Application Colors linked to CSS Variables
+              app: {
+                bg: 'var(--bg-app)',
+                surface: 'var(--bg-surface)',
+                border: 'var(--border-color)',
+                text: 'var(--text-main)',
+                muted: 'var(--text-muted)',
+                hover: 'var(--card-hover)',
+                input: 'var(--bg-input)'
+              }
+            },
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+            animation: {
+              'blob': 'blob 7s infinite',
+            },
+            keyframes: {
+              blob: {
+                '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                '100%': { transform: 'translate(0px, 0px) scale(1)' },
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      :root {
+        /* Default to Light Theme Variables (Tailwind uses these when 'dark' class is missing) */
+        --bg-app: #f1f5f9;      /* Slate 100 */
+        --bg-surface: #ffffff;  /* White */
+        --border-color: #e2e8f0; /* Slate 200 */
+        --text-main: #0f172a;    /* Slate 900 */
+        --text-muted: #64748b;   /* Slate 500 */
+        --card-hover: #f8fafc;   /* Slate 50 */
+        --bg-input: #ffffff;
+      }
+
+      .dark {
+        /* Dark Theme Variables */
+        --bg-app: #0f172a;       /* Slate 900 */
+        --bg-surface: #1e293b;   /* Slate 800 */
+        --border-color: #334155; /* Slate 700 */
+        --text-main: #f8fafc;    /* Slate 50 */
+        --text-muted: #94a3b8;   /* Slate 400 */
+        --card-hover: #2e3e52;
+        --bg-input: #020617;     /* Slate 950 */
+      }
+
+      body {
+        background-color: var(--bg-app);
+        color: var(--text-main);
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+      
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--bg-surface); 
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border-color); 
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--text-muted); 
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "recharts": "https://aistudiocdn.com/recharts@^3.4.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "react-router-dom": "https://aistudiocdn.com/react-router-dom@^7.9.6",
+    "firebase/app": "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js",
+    "firebase/auth": "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js",
+    "firebase/firestore": "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js",
+    "firebase/": "https://aistudiocdn.com/firebase@^12.6.0/",
+    "framer-motion": "https://aistudiocdn.com/framer-motion@^11.3.8",
+    "html-to-image": "https://aistudiocdn.com/html-to-image@^1.11.11"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
