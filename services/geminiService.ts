@@ -1,18 +1,19 @@
 import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
 import { UserProfile, DailyMetric, AIRecommendation } from "../types";
 
-// Initialize Gemini Client
+//
 const getAiClient = () => {
+  //
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-  
   if (!apiKey) {
-    console.warn("Gemini API Key is missing! Check x4u company");
+    console.warn("Gemini API Key is missing!");
     return null;
   }
   return new GoogleGenerativeAI(apiKey);
 };
 
-const MODEL_FAST = "gemini-1.5-flash";
+//
+const MODEL_FAST = "gemini-2.5-flash";
 
 export const generateHealthInsights = async (
   user: UserProfile,
@@ -21,43 +22,7 @@ export const generateHealthInsights = async (
   const genAI = getAiClient();
   if (!genAI) return null;
 
-  const model = genAI.getGenerativeModel({
-    model: MODEL_FAST,
-    generationConfig: {
-      responseMimeType: "application/json",
-      responseSchema: {
-        type: SchemaType.OBJECT,
-        properties: {
-          score: { type: SchemaType.NUMBER },
-          summary: { type: SchemaType.STRING },
-          recommendations: {
-            type: SchemaType.ARRAY,
-            items: {
-              type: SchemaType.OBJECT,
-              properties: {
-                category: { 
-                  type: SchemaType.STRING, 
-                  format: "enum", 
-                  enum: ['Sleep', 'Exercise', 'Diet', 'Stress', 'General'] 
-                },
-                title: { type: SchemaType.STRING },
-                description: { type: SchemaType.STRING },
-                priority: { 
-                  type: SchemaType.STRING, 
-                  format: "enum", 
-                  enum: ['High', 'Medium', 'Low'] 
-                },
-              },
-              required: ['category', 'title', 'description', 'priority']
-            }
-          }
-        },
-        required: ['score', 'summary', 'recommendations']
-      }
-    }
-  });
-
-  // Sort metrics by date descending to get recent context
+  //
   const recentMetrics = [...metrics].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 7);
 
   const prompt = `
@@ -66,7 +31,7 @@ export const generateHealthInsights = async (
     Recent 7 Days Data: ${JSON.stringify(recentMetrics)}
 
     Task:
-    1. Calculate a "Daily Health Score" (0-100) based on the most recent day's performance.
+    1. Calculate a "Daily Health Score" (0-100) based on the most recent day's performance (sleep, steps, stress, etc.).
     2. Provide a brief 2-sentence summary of their recent health trend.
     3. Generate 3 specific, actionable recommendations for tomorrow.
 
@@ -74,8 +39,46 @@ export const generateHealthInsights = async (
   `;
 
   try {
+    const model = genAI.getGenerativeModel({
+      model: MODEL_FAST,
+      generationConfig: {
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: SchemaType.OBJECT,
+          properties: {
+            score: { type: SchemaType.NUMBER },
+            summary: { type: SchemaType.STRING },
+            recommendations: {
+              type: SchemaType.ARRAY,
+              items: {
+                type: SchemaType.OBJECT,
+                properties: {
+                  //
+                  category: { 
+                    type: SchemaType.STRING, 
+                    format: "enum", 
+                    enum: ['Sleep', 'Exercise', 'Diet', 'Stress', 'General'] 
+                  },
+                  title: { type: SchemaType.STRING },
+                  description: { type: SchemaType.STRING },
+                  priority: { 
+                    type: SchemaType.STRING, 
+                    format: "enum", 
+                    enum: ['High', 'Medium', 'Low'] 
+                  },
+                },
+                required: ['category', 'title', 'description', 'priority']
+              }
+            }
+          },
+          required: ['score', 'summary', 'recommendations']
+        }
+      }
+    });
+
     const result = await model.generateContent(prompt);
     const text = result.response.text();
+    
     if (!text) return null;
     return JSON.parse(text);
   } catch (error) {
@@ -92,7 +95,7 @@ export const createChatSession = (user: UserProfile, metrics: DailyMetric[]) => 
   const genAI = getAiClient();
   if (!genAI) return null;
 
-  const recentStats = metrics.slice(-5);
+  const recentStats = metrics.slice(-5); //
 
   const systemInstruction = `
     You are "X4U Bio Assistant", a world-class AI health coach.
